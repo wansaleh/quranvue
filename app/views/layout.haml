@@ -1,0 +1,49 @@
+!!! 5
+/[if lt IE 7] <html lang="en" class="no-js ie6">
+/[if IE 7 ] <html lang="en" class="no-js ie7">
+/[if IE 8 ] <html lang="en" class="no-js ie8">
+/[if IE 9 ] <html lang="en" class="no-js ie9">
+/[if (gt IE 9)|!(IE)]<!--> <html lang="en" class="no-js">
+%head
+  %meta(charset="utf-8")
+  %title= @title
+  %meta(name="viewport" content="width=device-width, initial-scale=1.0")
+
+  / styles
+  = css :quranvue
+
+  / modernizr
+  = js :modernizr
+
+%body{:class => body_class}
+  .navbar.navbar-static-top
+    .navbar-inner
+      .container
+        %a.btn.btn-navbar(data-target=".nav-collapse" data-toggle="collapse")
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+        %a.brand(href="#") <span>Quran</span>Vue
+        .nav-collapse.collapse
+          %ul.nav
+            %li.nav-home
+              %a(href="#")
+                %i.icon-home
+                Home
+            %li.nav-old
+              %a(href="#old")
+                %i.icon-list
+                Old Index
+        / /.nav-collapse
+
+  = yield
+
+/ javascript
+= js :quranvue
+
+- json_init = yield_content :json_init
+- if !json_init.blank?
+  / json initializer
+  %script= json_init
+
+</html>

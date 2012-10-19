@@ -1,0 +1,117 @@
+#quranvue(data-bind="css: { loaded: settings.loaded(), loading: !settings.loaded() }")
+
+  .outer
+
+    #error
+      .alert
+        %a(href="#" class="close") ×
+        .alert-content
+
+    / %section.testing
+    /   .container
+    /     .row
+    /       .span12
+    /         %button.nice-btn Testing
+
+    %section.sura-list-wrapper(data-bind="if: settings.view() == 'sura_list'")
+      .container
+        .row
+          .span12
+            .sura-list
+
+    %section.sura-list-old-wrapper(data-bind="if: settings.view() == 'sura_list_old'")
+      .container
+        .row
+          .span12(data-bind="foreach: sura_list().suras")
+            %a.btn.btn-primary(data-bind="html: full_name_2, attr: { href: permalink }")
+
+    %section.aya-list-wrapper(data-bind="if: settings.view() == 'aya_list'")
+      .outer
+        .container(data-bind="with: sura_info")
+          .jumbotron
+            %h1(rel="tooltip" title="Back home")
+              %a(href="#")
+                .tname(data-bind="text: tname")
+                .ename(data-bind="text: ename")
+            %p
+              This sura was the <span data-bind="text: order_ordinal"></span> revealed.
+              Revealed in <span data-bind="text: location"></span>, containing <span data-bind="text: ayas"></span> ayas.
+
+        .navigator(data-bind="with: sura_info")
+          .navigator-affix
+            .container
+              .row
+                .span12
+                  %nav
+                    / ko if: prev
+                    %a.btn(data-bind="attr: { href: prev().permalink, title: prev().tname }" rel="tooltip")
+                      %i.icon-chevron-left
+                      %span(data-bind="text: prev().tname")
+                    / /ko
+
+                    %input#sura-select(type="hidden" style="width:250px")
+
+                    / ko if: next
+                    %a.btn(data-bind="attr: { href: next().permalink, title: next().tname }" rel="tooltip")
+                      %span(data-bind="text: next().tname")
+                      %i.icon-chevron-right
+                    / /ko
+
+            %span#top-link.top-link
+              .btn-group
+                %a.btn.btn-primary.home(href="#")
+                  %i.icon-home
+                %a.btn.btn-primary.top(href="#")
+                  %i.icon-chevron-up
+
+
+        #bismillah.container(data-bind="if: settings.sura_id() != 1")
+          .row
+            .span12
+              / .arabic بِسْمِ ٱللَّـهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ
+              %img(src="/images/ayas/bismillah-center.png")
+              In the name of Allah, the Entirely Merciful, the Especially Merciful.
+
+
+        %article.aya-list(data-bind="foreach: ayas")
+          .aya(data-bind="attr: { id: aya_id(), 'data-aya': aya() }, css: { alt: $index() % 2 == 1, 'sajda-recommended': sajda() == 1, 'sajda-obligatory': sajda() == 2, juz: juz() }")
+            .container
+              .row
+                .span12
+                  %img(data-bind="attr: { src: img_src }")
+              / .row
+              /   .span12
+              /     %p.arabic(dir="rtl")
+              /       %span(data-bind="text: text")
+              /       %strong (<span data-bind="text: aya_arabic"></span>)
+
+              .row
+                / .span6
+                /   %p.arabic(dir="rtl")
+                /     %span(data-bind="text: text")
+                /     %strong (<span data-bind="text: aya_arabic"></span>)
+
+                .span12
+                  %p.translation
+                    %strong(data-bind="html: identifier")
+                    %span(data-bind="html: translation")
+
+              .row
+                .span12
+                  %div(data-bind="if: sajda() == 1")
+                    .alert.alert-info.alert-sajda-recommended
+                      It is
+                      %strong recommended to sujud (prostrate)
+                      after reading this aya.
+
+                  %div(data-bind="if: sajda() == 2")
+                    .alert.alert-error.alert-sajda-recommended
+                      It is
+                      %strong obligatory to sujud (prostrate)
+                      after reading this aya.
+
+
+#loading
+  .loading-bar
+    .progress.progress-striped.active
+      .bar(style="width:100%;")
